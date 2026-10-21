@@ -16,7 +16,7 @@
       done: "Oynadık ✓", markDone: "Oynadık olarak işaretle", noData: "Bu yaş için henüz içerik yok.",
       loading: "İçerik yükleniyor…", offline: "İnternet yok; en son kaydedilen içerik gösteriliyor.",
       error: "İçerik yüklenemedi. İnternet bağlantını kontrol et.",
-      whyBook: "Neden bu kitap", howRead: "Nasıl okunur", by: "", all: "Hepsi",
+      whyBook: "Neden bu kitap", howRead: "Nasıl okunur", by: "", all: "Hepsi", buy: "Satın al", affiliate: "Bu bağlantıdan alışveriş yaparsan uygulamaya küçük bir destek olur.",
       alan: { motor_kaba: "Kaba motor", motor_ince: "İnce motor", dil: "Dil", bilissel: "Bilişsel", sosyal_duygusal: "Sosyal-duygusal" },
       disclaimer: "Bu uygulama genel gelişim bilgisi sunar; tıbbi tavsiye değildir. Bebeğinin gelişimiyle ilgili endişen varsa çocuk doktoruna başvur.",
       edit: "Profili düzenle", reset: "Sıfırla", refresh: "İçeriği yenile", installTip: "Telefona kur: Safari'de Paylaş → Ana Ekrana Ekle. Android'de menü → Ana ekrana ekle.",
@@ -32,7 +32,7 @@
       done: "Played ✓", markDone: "Mark as played", noData: "No content for this age yet.",
       loading: "Loading content…", offline: "You're offline; showing last saved content.",
       error: "Could not load content. Check your connection.",
-      whyBook: "Why this book", howRead: "How to read it", by: "by ", all: "All",
+      whyBook: "Why this book", howRead: "How to read it", by: "by ", all: "All", buy: "Buy", affiliate: "Buying through this link gives the app a small boost.",
       alan: { motor_kaba: "Gross motor", motor_ince: "Fine motor", dil: "Language", bilissel: "Cognitive", sosyal_duygusal: "Social-emotional" },
       disclaimer: "This app offers general developmental information, not medical advice. If you have concerns about your baby's development, talk to your paediatrician.",
       edit: "Edit profile", reset: "Reset", refresh: "Refresh content", installTip: "Install: in Safari tap Share → Add to Home Screen. On Android, menu → Add to Home screen.",
@@ -192,11 +192,16 @@
     </div>`;
   }
   function bookCard(b) {
+    const neden = L(b, "neden") || b.neden_bu_kitap || "";
+    const nasil = L(b, "nasil") || b.nasil_okunur || "";
+    const link = (state.lang === "en" ? (b.link_en || b.link_tr) : (b.link_tr || b.link_en)) || "";
+    const safeLink = /^https?:\/\//i.test(link) ? link : "";
     return `<div class="card"><h2>${esc(b.kitap_adi)}</h2>
       <div class="meta"><span class="pill">${b.dil === "tr" ? "🇹🇷 Türkçe" : "🇬🇧 English"}</span>${b.tur ? `<span class="pill">${esc(b.tur)}</span>` : ""}<span class="pill">${esc(b.ay_min)}–${esc(b.ay_max)} ${t().months}</span></div>
       ${b.yazar ? `<p class="small">${t().by}${esc(b.yazar)}</p>` : ""}
-      ${b.neden_bu_kitap ? `<h3>${t().whyBook}</h3><p>${esc(b.neden_bu_kitap)}</p>` : ""}
-      ${b.nasil_okunur ? `<h3>${t().howRead}</h3><p>${esc(b.nasil_okunur)}</p>` : ""}</div>`;
+      ${neden ? `<h3>${t().whyBook}</h3><p>${esc(neden)}</p>` : ""}
+      ${nasil ? `<h3>${t().howRead}</h3><p>${esc(nasil)}</p>` : ""}
+      ${safeLink ? `<a class="done-btn buy" href="${esc(safeLink)}" target="_blank" rel="noopener sponsored">${t().buy}</a><p class="small">${t().affiliate}</p>` : ""}</div>`;
   }
   function nav() {
     const items = [["week", "🗓", t().thisWeek], ["all", "🧸", t().allActivities], ["books", "📚", t().books], ["settings", "⚙️", t().settings]];
@@ -247,6 +252,7 @@
     const showMain = state.child && !state.editing;
     // Form doldurulurken arka planda veri gelirse formu silme
     if (!showMain && !force && document.getElementById("onb")) return;
+    document.documentElement.lang = state.lang;
     app.innerHTML = showMain ? main() : onboarding();
     window.scrollTo({ top: Math.min(window.scrollY, 0) });
   }

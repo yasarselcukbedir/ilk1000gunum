@@ -83,3 +83,5 @@ button { font: inherit; }
 .error { color: #8B2E2E; }
 .footer-note { font-size: 13px; color: var(--muted); text-align: center; margin: 28px 0 10px; line-height: 1.5; }
 .install-tip { background: var(--soft); border-radius: 14px; padding: 12px 14px; font-size: 14px; color: var(--accent-ink); margin: 10px 0; }
+
+a.buy { display:block; text-align:center; text-decoration:none; }
