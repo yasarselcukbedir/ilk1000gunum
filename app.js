@@ -154,7 +154,7 @@
 
   /* ---------- Yardımcılar ---------- */
   const esc = (s) => String(s || "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-  const lines = (s) => String(s || "").split(/\n+/).map(x => x.trim()).filter(Boolean);
+  const lines = (s) => String(s || "").split(/\n+| \/ /).map(x => x.trim()).filter(Boolean);
   const L = (r, key) => r[key + "_" + state.lang] || r[key + "_tr"] || "";
 
   /* ---------- Görünümler ---------- */
